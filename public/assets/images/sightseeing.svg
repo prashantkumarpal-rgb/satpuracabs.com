@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs><linearGradient id="b" x2="0" y2="1"><stop stop-color="#cceaf4"/><stop offset="1" stop-color="#e9e0b9"/></linearGradient></defs>
+<rect width="1600" height="900" fill="url(#b)"/><path d="M0 570 L260 350 500 560 760 300 1040 550 1310 360 1600 560 V900 H0Z" fill="#557c5a"/>
+<path d="M0 650 Q400 540 800 650 T1600 640 V900 H0Z" fill="#274f37"/>
+<path d="M650 900 C620 790 700 690 810 610" stroke="#d9bf83" stroke-width="110" fill="none"/>
+<g transform="translate(570 540)"><rect x="0" y="70" width="330" height="90" rx="20" fill="#f5f5f1"/><path d="M55 70 L100 15 H245 L285 70Z" fill="#d8e6e9"/><circle cx="70" cy="160" r="30" fill="#222"/><circle cx="260" cy="160" r="30" fill="#222"/></g>
+<text x="70" y="110" font-family="Arial,sans-serif" font-size="52" font-weight="700" fill="#234936">PACHMARHI SIGHTSEEING</text>
+<text x="72" y="165" font-family="Arial,sans-serif" font-size="27" fill="#466650">Bee Falls • Dhoopgarh • Jata Shankar • Pandav Caves</text>
+</svg>

@@ -1,0 +1,37 @@
+---
+export const prerender = true;
+
+import RoutePage from "../components/RoutePage.astro";
+import DestinationPage from "../components/DestinationPage.astro";
+import { destinations, getDestination } from "../data/destinations";
+import { routes, getRoute } from "../data/routes";
+
+export function getStaticPaths() {
+  return [
+    ...routes.map((route) => ({
+      params: { slug: route.slug },
+      props: { kind: "route" as const },
+    })),
+    ...destinations.map((destination) => ({
+      params: { slug: destination.slug },
+      props: { kind: "destination" as const },
+    })),
+  ];
+}
+
+const { slug } = Astro.params;
+const { kind } = Astro.props;
+
+const route = kind === "route" ? getRoute(slug) : undefined;
+const destination = kind === "destination" ? getDestination(slug) : undefined;
+
+if (kind === "route" && !route) {
+  throw new Error(`Missing route data for ${slug}`);
+}
+if (kind === "destination" && !destination) {
+  throw new Error(`Missing destination data for ${slug}`);
+}
+---
+
+{route && <RoutePage route={route} />}
+{destination && <DestinationPage destination={destination} />}

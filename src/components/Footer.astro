@@ -1,0 +1,42 @@
+---
+import { site } from "../config/site";
+import { phoneHref, quoteHref } from "../lib/links";
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footergrid">
+      <div>
+        <h3>SATPURA CABS</h3>
+        <p>Local taxi service for Pachmarhi, Tamia, Madhai, Pipariya and Bhopal.</p>
+        <p>
+          <a data-track="phone_click" href={phoneHref(!site.usingPlaceholderPhone, site.phoneNumber)}>{site.phoneDisplay}</a><br />
+          <a data-track="whatsapp_click" href={quoteHref(!site.usingPlaceholderWhatsapp, site.whatsappNumber, site.quoteMessage)}>WhatsApp us</a>
+        </p>
+      </div>
+      <div>
+        <h3>Popular routes</h3>
+        <p>
+          <a href="/pipariya-to-pachmarhi-taxi">Pipariya → Pachmarhi</a><br />
+          <a href="/bhopal-to-pachmarhi-taxi">Bhopal → Pachmarhi</a><br />
+          <a href="/pipariya-to-tamia-taxi">Pipariya → Tamia</a><br />
+          <a href="/pachmarhi-to-madhai-taxi">Pachmarhi → Madhai</a>
+        </p>
+      </div>
+      <div>
+        <h3>Explore</h3>
+        <p>
+          <a href="/pachmarhi-taxi">Pachmarhi Taxi</a><br />
+          <a href="/pipariya-taxi">Pipariya Taxi</a><br />
+          <a href="/tamia-taxi">Tamia Taxi</a><br />
+          <a href="/madhai-taxi">Madhai Taxi</a><br />
+          <a href="/pachmarhi-local-sightseeing">Sightseeing</a><br />
+          <a href="/contact">Contact</a>
+        </p>
+      </div>
+    </div>
+    <div class="credits">
+      Pictures are illustrations for the website, not photographs of Satpura Cabs cars or drivers. Replace them with your own photos when you have them. Phone, address and fares stay blank until you add the real details.
+    </div>
+  </div>
+</footer>

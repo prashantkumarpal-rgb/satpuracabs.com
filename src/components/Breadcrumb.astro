@@ -1,0 +1,11 @@
+---
+interface Props {
+  current: string;
+}
+
+const { current } = Astro.props;
+---
+
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="/">Home</a> / {current}
+</nav>

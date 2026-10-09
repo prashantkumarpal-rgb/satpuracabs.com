@@ -1,0 +1,151 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import RouteCard from "../components/RouteCard.astro";
+import QuoteForm from "../components/QuoteForm.astro";
+import FAQ from "../components/FAQ.astro";
+import { images } from "../data/images";
+import { faqSchema, taxiServiceSchema } from "../lib/schema";
+
+export const prerender = true;
+
+const popularRoutes = [
+  {
+    title: "Pipariya → Pachmarhi",
+    text: "Railway station pickup to Pachmarhi.",
+    href: "/pipariya-to-pachmarhi-taxi",
+  },
+  {
+    title: "Bhopal → Pachmarhi",
+    text: "City, airport and railway-station transfers.",
+    href: "/bhopal-to-pachmarhi-taxi",
+  },
+  {
+    title: "Pipariya → Tamia",
+    text: "For Tamia and Patalkot-region trips.",
+    href: "/pipariya-to-tamia-taxi",
+  },
+  {
+    title: "Pachmarhi → Madhai",
+    text: "Connect Pachmarhi with the Satpura/Madhai side.",
+    href: "/pachmarhi-to-madhai-taxi",
+  },
+];
+
+const services = [
+  {
+    title: "Station transfers",
+    text: "Pipariya Railway Station pickup and drop for Pachmarhi travellers.",
+  },
+  {
+    title: "Intercity cabs",
+    text: "One-way and return journeys between Bhopal and Satpura destinations.",
+  },
+  {
+    title: "Local sightseeing",
+    text: "Plan a local Pachmarhi day with a car and driver.",
+  },
+];
+
+const reasons = [
+  { title: "Local drivers", text: "The service is arranged by people who work the Satpura roads, not a national booking app." },
+  { title: "Route-specific service", text: "The quote is for your pickup, destination, date and group size." },
+  { title: "WhatsApp confirmation", text: "A person confirms the vehicle and the current fare before you travel." },
+  { title: "Station pickup", text: "Pipariya Railway Station pickups can be arranged when you share the train details." },
+  { title: "Local sightseeing", text: "A car and driver for Pachmarhi stops, after the day's access is confirmed." },
+];
+
+const faqs = [
+  { question: "How do I get a fare?", answer: "Send the form or a WhatsApp message. Satpura Cabs confirms the fare for that date and vehicle. This site does not list a fixed price." },
+  { question: "Can I pay on the website?", answer: "No. This site takes the enquiry. Payment is arranged with the person who confirms the trip." },
+  { question: "Which places do you cover?", answer: "Pachmarhi, Pipariya, Tamia, Madhai, Matkuli and Bhopal." },
+];
+
+const road = images.road;
+const fleet = images.fleet;
+const tempo = images.tempo;
+---
+
+<Base
+  title="Pachmarhi Taxi & Cab Service | Satpura Cabs"
+  description="Local taxi service for Pachmarhi, Tamia, Madhai, Pipariya and Bhopal. Get a route-specific cab quote by phone or WhatsApp."
+  image={images.pachmarhi.src}
+  jsonLd={[taxiServiceSchema(), faqSchema(faqs)]}
+>
+  <Hero />
+  <section class="section" id="routes">
+    <div class="container">
+      <h2>Popular taxi routes</h2>
+      <p class="lead">Start with the journeys travellers search for most. Ask for a fare and vehicle before your trip.</p>
+      <div class="grid2">
+        {popularRoutes.map((item) => (
+          <RouteCard title={item.title} text={item.text} href={item.href} />
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section alt">
+    <div class="container">
+      <h2>Why Satpura Cabs</h2>
+      <div class="grid3">
+        {reasons.map((item) => (
+          <div class="card">
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section" id="quote">
+    <div class="container grid2">
+      <div>
+        <div class="eyebrow">Get a quote</div>
+        <h2>Tell us where you need to go.</h2>
+        <p class="lead">For the fastest response, include your pickup point, destination, date and time. You can also call or WhatsApp directly.</p>
+        <img
+          style="width:100%;margin-top:22px;border-radius:22px"
+          src={road.src}
+          alt="Illustration of a cab on a Satpura hill road"
+          width={road.width}
+          height={road.height}
+          loading="lazy"
+        />
+        <p class="caption">Illustration, not a photograph of a Satpura Cabs vehicle.</p>
+      </div>
+      <QuoteForm idPrefix="home" />
+    </div>
+  </section>
+  <section class="section alt" id="services">
+    <div class="container">
+      <h2>What we can arrange</h2>
+      <div class="grid3">
+        {services.map((item) => (
+          <div class="card">
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <h2>Vehicles you can ask for</h2>
+      <p class="lead">Tell us the group size. We confirm which vehicle is free. These pictures are illustrations.</p>
+      <div class="grid2">
+        <figure class="card">
+          <img class="stopimg" src={fleet.src} alt="Illustration of a small fleet of cars" width={fleet.width} height={fleet.height} loading="lazy" />
+          <h3>Car or SUV</h3>
+          <p>Hatchback, sedan or SUV / Ertiga, depending on passengers and luggage.</p>
+        </figure>
+        <figure class="card">
+          <img class="stopimg" src={tempo.src} alt="Illustration of a tempo traveller" width={tempo.width} height={tempo.height} loading="lazy" />
+          <h3>Tempo Traveller</h3>
+          <p>For larger groups. Ask whether one is free on your date.</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+  <FAQ items={faqs} />
+</Base>

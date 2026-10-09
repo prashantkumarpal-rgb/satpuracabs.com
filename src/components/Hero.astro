@@ -1,0 +1,38 @@
+---
+import { site } from "../config/site";
+import { phoneHref, quoteHref } from "../lib/links";
+import { images } from "../data/images";
+
+const image = images.pachmarhi;
+---
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">{site.areas}</div>
+      <h1>Your local cab for the Satpura.</h1>
+      <p>
+        Simple, local taxi service for the routes travellers actually need — Pipariya Railway Station to Pachmarhi, Bhopal to Pachmarhi, Tamia, Madhai and local sightseeing.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="#quote">Get a taxi quote</a>
+        <a class="btn soft" data-track="whatsapp_click" href={quoteHref(!site.usingPlaceholderWhatsapp, site.whatsappNumber, site.quickMessage)}>WhatsApp</a>
+        <a class="btn" data-track="phone_click" href={phoneHref(!site.usingPlaceholderPhone, site.phoneNumber)}>Call</a>
+      </div>
+      <div class="trust">
+        <span>✓ Local drivers</span>
+        <span>✓ Route-specific service</span>
+        <span>✓ WhatsApp confirmation</span>
+      </div>
+    </div>
+    <div class="heroimg">
+      <img
+        src={image.src}
+        alt="Illustration of the Satpura hills around Pachmarhi"
+        width={image.width}
+        height={image.height}
+        fetchpriority="high"
+      />
+    </div>
+  </div>
+</section>

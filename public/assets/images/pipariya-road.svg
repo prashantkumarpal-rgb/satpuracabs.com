@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#cfe9f7"/><stop offset="1" stop-color="#eef2df"/></linearGradient></defs>
+<rect width="1600" height="900" fill="url(#sky)"/><path d="M0 500 Q250 360 500 500 T1000 490 T1600 500 V900 H0Z" fill="#6b8e5e"/>
+<path d="M690 900 C680 780 760 680 880 610 C1010 535 1090 500 1220 430" fill="none" stroke="#b99a67" stroke-width="150"/>
+<path d="M690 900 C680 780 760 680 880 610 C1010 535 1090 500 1220 430" fill="none" stroke="#e8d7b0" stroke-width="90"/>
+<rect x="1160" y="500" width="150" height="42" rx="8" fill="#fff"/><text x="1185" y="530" font-family="Arial" font-size="24" fill="#234">PIPARIYA</text>
+<circle cx="1320" cy="170" r="72" fill="#f5d38d"/>
+<text x="70" y="110" font-family="Arial,sans-serif" font-size="52" font-weight="700" fill="#234936">PIPARIYA</text>
+<text x="72" y="165" font-family="Arial,sans-serif" font-size="27" fill="#466650">Railway station • gateway to Pachmarhi</text>
+</svg>

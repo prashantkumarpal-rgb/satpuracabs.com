@@ -1,0 +1,16 @@
+---
+import { askForFare } from "../data/vehicles";
+
+interface Props {
+  name: string;
+  use: string;
+}
+
+const { name, use } = Astro.props;
+---
+
+<tr>
+  <td>{name}</td>
+  <td>{use}</td>
+  <td>{askForFare}</td>
+</tr>

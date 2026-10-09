@@ -1,0 +1,76 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumb from "./Breadcrumb.astro";
+import QuoteForm from "./QuoteForm.astro";
+import RouteCard from "./RouteCard.astro";
+import FAQ from "./FAQ.astro";
+import { images } from "../data/images";
+import { commonRequests, destinationPlan } from "../data/content";
+import { site } from "../config/site";
+import { phoneHref, quoteHref } from "../lib/links";
+import { breadcrumbSchema, faqSchema, serviceSchema } from "../lib/schema";
+import type { DestinationData } from "../data/destinations";
+
+interface Props {
+  destination: DestinationData;
+}
+
+const { destination } = Astro.props;
+const image = images[destination.image];
+const path = `/${destination.slug}`;
+const whatsappReady = !site.usingPlaceholderWhatsapp;
+const phoneReady = !site.usingPlaceholderPhone;
+---
+
+<Base
+  title={destination.title}
+  description={destination.description}
+  image={image.src}
+  jsonLd={[
+    serviceSchema(destination.h1, destination.description, path),
+    breadcrumbSchema(destination.crumb, path),
+    faqSchema(destination.faqs),
+  ]}
+>
+  <section class="pagehero">
+    <div class="container">
+      <Breadcrumb current={destination.crumb} />
+      <div class="routehero">
+        <div>
+          <div class="eyebrow">SATPURA CABS</div>
+          <h1>{destination.h1}</h1>
+          <p class="lead">{destination.lead}</p>
+          <div class="actions">
+            <a class="btn primary" data-track="whatsapp_click" href={quoteHref(whatsappReady, site.whatsappNumber, destination.whatsappMessage)}>WhatsApp for a quote</a>
+            <a class="btn" data-track="phone_click" href={phoneHref(phoneReady, site.phoneNumber)}>Call</a>
+          </div>
+        </div>
+        <img src={image.src} alt={destination.imageAlt} width={image.width} height={image.height} fetchpriority="high" />
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid2">
+      <div>
+        <h2>{destination.planTitle}</h2>
+        <p>{destinationPlan}</p>
+        <div class="card">
+          <h3>Common requests</h3>
+          <p>{commonRequests}</p>
+        </div>
+      </div>
+      <QuoteForm pickup={destination.pickup} idPrefix={destination.slug} />
+    </div>
+  </section>
+  <section class="section alt">
+    <div class="container">
+      <h2>Related routes</h2>
+      <div class="grid3">
+        {destination.related.map((item) => (
+          <RouteCard title={item.title} text={item.text} href={item.href} variant="link" />
+        ))}
+      </div>
+    </div>
+  </section>
+  <FAQ items={destination.faqs} />
+</Base>

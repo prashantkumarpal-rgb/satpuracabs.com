@@ -1,0 +1,154 @@
+---
+import { site } from "../config/site";
+import { digits } from "../lib/links";
+import { passengerOptions, tripTypes, vehicleOptions } from "../data/vehicles";
+
+interface Props {
+  pickup?: string;
+  destination?: string;
+  tripType?: string;
+  idPrefix?: string;
+}
+
+const { pickup = "", destination = "", tripType = "One way", idPrefix = "quote" } = Astro.props;
+const field = (name: string) => `${idPrefix}-${name}`;
+const whatsappReady = !site.usingPlaceholderWhatsapp && digits(site.whatsappNumber).length >= 12;
+---
+
+<form class="form quote-form" data-brand={site.name} data-whatsapp={whatsappReady ? digits(site.whatsappNumber) : ""}>
+  <div class="hp" aria-hidden="true">
+    <label for={field("company")}>Company</label>
+    <input id={field("company")} name="company" tabindex="-1" autocomplete="off" />
+  </div>
+  <div class="formgrid">
+    <div class="field">
+      <label for={field("name")}>Name</label>
+      <input id={field("name")} name="name" required placeholder="Your name" autocomplete="name" />
+    </div>
+    <div class="field">
+      <label for={field("phone")}>Phone</label>
+      <input id={field("phone")} name="phone" required inputmode="tel" placeholder="10-digit mobile number" autocomplete="tel" />
+    </div>
+    <div class="field">
+      <label for={field("pickup")}>Pickup</label>
+      <input id={field("pickup")} name="pickup" required value={pickup} placeholder="Pickup location" />
+    </div>
+    <div class="field">
+      <label for={field("destination")}>Destination</label>
+      <input id={field("destination")} name="destination" required value={destination} placeholder="Destination" />
+    </div>
+    <div class="field">
+      <label for={field("date")}>Date</label>
+      <input id={field("date")} type="date" name="date" required />
+    </div>
+    <div class="field">
+      <label for={field("time")}>Time</label>
+      <input id={field("time")} type="time" name="time" required />
+    </div>
+    <div class="field">
+      <label for={field("passengers")}>Passengers</label>
+      <select id={field("passengers")} name="passengers">
+        {passengerOptions.map((option) => <option>{option}</option>)}
+      </select>
+    </div>
+    <div class="field">
+      <label for={field("vehicle")}>Vehicle</label>
+      <select id={field("vehicle")} name="vehicle">
+        {vehicleOptions.map((option) => <option>{option}</option>)}
+      </select>
+    </div>
+    <div class="field">
+      <label for={field("trip")}>Trip type</label>
+      <select id={field("trip")} name="tripType">
+        {tripTypes.map((option) => <option selected={option === tripType}>{option}</option>)}
+      </select>
+    </div>
+    <div class="field full">
+      <label for={field("notes")}>Notes</label>
+      <textarea id={field("notes")} name="notes" placeholder="Train number, flight, return trip, sightseeing, luggage, etc."></textarea>
+    </div>
+  </div>
+  {site.turnstileSiteKey && (
+    <div class="cf-turnstile" data-sitekey={site.turnstileSiteKey}></div>
+  )}
+  <button class="btn primary" type="submit">Continue on WhatsApp</button>
+  <p class="form-message" role="status" hidden></p>
+  <p style="font-size:12px;color:#718078;margin-bottom:0">
+    Your enquiry is saved for a callback, then WhatsApp opens when a number is configured. Fares are confirmed by a person.
+  </p>
+</form>
+{site.turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+
+<script>
+  function track(name: string) {
+    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+    if (typeof gtag === "function") gtag("event", name, { page: location.pathname });
+  }
+
+  function attribution() {
+    const stored = sessionStorage.getItem("sc_attr");
+    const parsed = stored ? JSON.parse(stored) as Record<string, string> : {};
+    return {
+      landing_page: parsed.landing_page || location.pathname,
+      source_page: location.pathname,
+      referrer: parsed.referrer || "",
+      utm_source: parsed.utm_source || "",
+      utm_medium: parsed.utm_medium || "",
+      utm_campaign: parsed.utm_campaign || "",
+    };
+  }
+
+  document.querySelectorAll("form.quote-form").forEach((node) => {
+    if (!(node instanceof HTMLFormElement)) return;
+    let started = false;
+    node.addEventListener("focusin", () => {
+      if (started) return;
+      started = true;
+      track("quote_start");
+    });
+    node.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const status = node.querySelector(".form-message");
+      const data = new FormData(node);
+      const payload = {
+        ...Object.fromEntries(data.entries()),
+        ...attribution(),
+        turnstileToken: String(data.get("cf-turnstile-response") || ""),
+      };
+      track("quote_submit");
+      let message = "Enquiry received. A person will confirm the vehicle and fare.";
+      try {
+        const response = await fetch("/api/enquiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json() as { ok?: boolean; error?: string };
+        if (!response.ok || result.ok === false) message = result.error || "Check the form and try again.";
+      } catch {
+        message = "The enquiry could not be saved just now. You can still continue on WhatsApp.";
+      }
+      if (status instanceof HTMLElement) {
+        status.hidden = false;
+        status.textContent = message;
+      }
+      const whatsapp = node.getAttribute("data-whatsapp") || "";
+      const brand = node.getAttribute("data-brand") || "Satpura Cabs";
+      if (whatsapp.length >= 12) {
+        const text = [
+          `Hello ${brand}, I need a taxi.`,
+          `Name: ${payload.name}`,
+          `From: ${payload.pickup}`,
+          `To: ${payload.destination}`,
+          `Date: ${payload.date}`,
+          `Time: ${payload.time}`,
+          `Passengers: ${payload.passengers}`,
+          `Vehicle: ${payload.vehicle || "Any"}`,
+          `Trip: ${payload.tripType || "One way"}`,
+          `Notes: ${String(payload.notes || "").trim() || "-"}`,
+        ].join("\n");
+        window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+      }
+    });
+  });
+</script>

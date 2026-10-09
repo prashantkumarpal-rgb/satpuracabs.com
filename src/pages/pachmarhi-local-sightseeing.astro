@@ -1,0 +1,87 @@
+---
+import Base from "../layouts/Base.astro";
+import FAQ from "../components/FAQ.astro";
+import { faqSchema, serviceSchema, breadcrumbSchema } from "../lib/schema";
+
+export const prerender = true;
+import Breadcrumb from "../components/Breadcrumb.astro";
+import QuoteForm from "../components/QuoteForm.astro";
+import { extraPages } from "../data/pages";
+import { images } from "../data/images";
+import { site } from "../config/site";
+import { phoneHref, quoteHref } from "../lib/links";
+
+const page = extraPages[0];
+const image = images.sightseeing;
+const message =
+  "Hello Satpura Cabs, I want a Pachmarhi local sightseeing cab. Please share vehicle options and current rates.";
+
+const stops = [
+  { title: "Bee Falls", text: "One of Pachmarhi's well-known waterfall attractions.", image: images.beeFalls, alt: "Illustration of Bee Falls at Pachmarhi" },
+  { title: "Dhoopgarh", text: "A popular viewpoint for Satpura scenery and sunset experiences.", image: images.dhoopgarh, alt: "Illustration of the Dhoopgarh viewpoint" },
+  { title: "Jata Shankar", text: "A cave and spiritual site in the Pachmarhi area.", image: images.jataShankar, alt: "Illustration of Jata Shankar" },
+  { title: "Pandav Caves", text: "A historic and popular local attraction.", image: images.pandavCaves, alt: "Illustration of the Pandav Caves" },
+  { title: "Handi Khoh", text: "A dramatic ravine and viewpoint area.", image: images.handiKhoh, alt: "Illustration of Handi Khoh" },
+  { title: "Apsara Vihar", text: "A waterfall and pool attraction often included in local sightseeing plans.", image: images.apsaraVihar, alt: "Illustration of Apsara Vihar" },
+];
+const faqs = [
+  { question: "Are all these stops open every day?", answer: "No. Confirm today's access and local operating conditions before travel." },
+  { question: "Is the sightseeing fare listed?", answer: "No. Tell us the hours and group size, and ask for the current fare." },
+];
+---
+
+<Base title={page.title} description={page.description} image={image.src} jsonLd={[serviceSchema(page.title, page.description, page.path), breadcrumbSchema("Pachmarhi Local Sightseeing", page.path), faqSchema(faqs)]}>
+  <section class="pagehero">
+    <div class="container">
+      <Breadcrumb current="Pachmarhi Local Sightseeing" />
+      <div class="routehero">
+        <div>
+          <div class="eyebrow">LOCAL SIGHTSEEING</div>
+          <h1>Pachmarhi Local Sightseeing Taxi</h1>
+          <p class="lead">Use a local car and driver to explore Pachmarhi at your own pace. Tell us how many people are travelling and how many hours you need the vehicle.</p>
+          <div class="actions">
+            <a class="btn primary" data-track="whatsapp_click" href={quoteHref(!site.usingPlaceholderWhatsapp, site.whatsappNumber, message)}>Ask for sightseeing rates</a>
+            <a class="btn" data-track="phone_click" href={phoneHref(!site.usingPlaceholderPhone, site.phoneNumber)}>Call</a>
+          </div>
+        </div>
+        <img
+          src={image.src}
+          alt="Illustration of a Pachmarhi sightseeing drive"
+          width={image.width}
+          height={image.height}
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <h2>Popular Pachmarhi stops</h2>
+      <p class="lead">Your final itinerary should be confirmed locally because access, weather and local operating rules can change. Confirm today's access and local operating conditions before travel.</p>
+      <div class="grid3">
+        {stops.map((stop) => (
+          <div class="card">
+            <img class="stopimg" src={stop.image.src} alt={stop.alt} width={stop.image.width} height={stop.image.height} loading="lazy" />
+            <h3>{stop.title}</h3>
+            <p>{stop.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section alt">
+    <div class="container grid2">
+      <div>
+        <h2>Request a sightseeing quote</h2>
+        <p>Tell us your group size, preferred start time and whether you want a full-day or shorter local trip.</p>
+      </div>
+      <QuoteForm
+        idPrefix="sightseeing"
+        pickup="Pachmarhi hotel / pickup point"
+        destination="Pachmarhi local sightseeing"
+        tripType="Local sightseeing"
+      />
+    </div>
+  </section>
+  <FAQ items={faqs} />
+</Base>

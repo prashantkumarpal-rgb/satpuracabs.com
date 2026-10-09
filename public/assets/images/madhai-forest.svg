@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#d9efe0"/><stop offset="1" stop-color="#7ba274"/></linearGradient></defs>
+<rect width="1600" height="900" fill="url(#bg)"/><path d="M0 540 Q330 380 650 560 Q950 390 1600 540 V900 H0Z" fill="#315d3f"/>
+<g fill="#214d34"><circle cx="160" cy="420" r="150"/><circle cx="390" cy="370" r="190"/><circle cx="690" cy="430" r="170"/><circle cx="1030" cy="350" r="200"/><circle cx="1370" cy="420" r="180"/></g>
+<path d="M0 720 Q400 620 800 710 T1600 690 V900 H0Z" fill="#c7b77d"/>
+<path d="M700 900 C680 800 730 730 810 680 C900 625 970 600 1040 520" fill="none" stroke="#e6d9a6" stroke-width="36"/>
+<g fill="#f5f1dc"><circle cx="1320" cy="210" r="7"/><circle cx="1360" cy="250" r="5"/><circle cx="1280" cy="270" r="6"/></g>
+<text x="70" y="110" font-family="Arial,sans-serif" font-size="52" font-weight="700" fill="#1d4930">MADHAI • SATPURA</text>
+<text x="72" y="165" font-family="Arial,sans-serif" font-size="27" fill="#365d42">Forest • safari access • river landscape</text>
+</svg>

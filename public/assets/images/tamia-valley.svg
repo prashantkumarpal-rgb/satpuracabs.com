@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs><linearGradient id="s" x2="0" y2="1"><stop stop-color="#d9edf7"/><stop offset="1" stop-color="#f4ead0"/></linearGradient><linearGradient id="m" x2="0" y2="1"><stop stop-color="#668b72"/><stop offset="1" stop-color="#244d3b"/></linearGradient></defs>
+<rect width="1600" height="900" fill="url(#s)"/><path d="M0 410 Q250 220 520 440 Q780 160 1040 430 Q1320 210 1600 420 V900 H0Z" fill="#6d9475"/>
+<path d="M0 540 Q230 360 470 560 Q720 310 960 560 Q1220 360 1600 550 V900 H0Z" fill="url(#m)"/>
+<path d="M760 450 Q820 550 850 900" stroke="#d5b47b" stroke-width="28" fill="none"/>
+<path d="M820 490 Q700 570 640 700" stroke="#b1c89d" stroke-width="10" fill="none"/>
+<circle cx="1320" cy="150" r="75" fill="#f2d28c" opacity=".8"/>
+<text x="70" y="110" font-family="Arial,sans-serif" font-size="52" font-weight="700" fill="#234a39">TAMIA</text>
+<text x="72" y="165" font-family="Arial,sans-serif" font-size="27" fill="#416451">Valleys • Forest roads • Patalkot region</text>
+</svg>

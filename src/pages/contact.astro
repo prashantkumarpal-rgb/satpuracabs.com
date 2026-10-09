@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+
+export const prerender = true;
+import Breadcrumb from "../components/Breadcrumb.astro";
+import QuoteForm from "../components/QuoteForm.astro";
+import { extraPages } from "../data/pages";
+import { site } from "../config/site";
+import { phoneHref, quoteHref } from "../lib/links";
+
+const page = extraPages[1];
+---
+
+<Base title={page.title} description={page.description}>
+  <section class="pagehero">
+    <div class="container">
+      <Breadcrumb current="Contact" />
+      <h1>Contact Satpura Cabs</h1>
+      <p class="lead">For the fastest response, call or WhatsApp. The details below are placeholders until you add the actual business information.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid2">
+      <div class="card">
+        <h2>Call or WhatsApp</h2>
+        <p><strong>Phone:</strong> <a data-track="phone_click" href={phoneHref(!site.usingPlaceholderPhone, site.phoneNumber)}>{site.phoneDisplay}</a></p>
+        <p><strong>WhatsApp:</strong> <a data-track="whatsapp_click" href={quoteHref(!site.usingPlaceholderWhatsapp, site.whatsappNumber, site.quoteMessage)}>Start WhatsApp</a></p>
+        <p><strong>Base:</strong> Pipariya / Pachmarhi region, Madhya Pradesh</p>
+        <p><strong>Service area:</strong> Pachmarhi, Tamia, Madhai, Pipariya, Matkuli and Bhopal.</p>
+      </div>
+      <QuoteForm idPrefix="contact" />
+    </div>
+  </section>
+</Base>

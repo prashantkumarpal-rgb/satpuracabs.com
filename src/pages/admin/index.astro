@@ -1,0 +1,109 @@
+---
+export const prerender = false;
+
+import { adminCookieMatches, adminCookieName } from "../../lib/admin-auth";
+import { runtimeEnv } from "../../lib/db";
+import { enquiryStatuses } from "../../lib/enquiry";
+import "../../styles/global.css";
+import { telHref, whatsappHref } from "../../lib/links";
+import { site } from "../../config/site";
+
+const env = runtimeEnv(Astro.locals);
+const authed = await adminCookieMatches(Astro.cookies.get(adminCookieName)?.value, env.ADMIN_SECRET);
+const filter = Astro.url.searchParams.get("status") || "new";
+const active = enquiryStatuses.includes(filter as (typeof enquiryStatuses)[number]) ? filter : "new";
+
+interface Row {
+  id: number;
+  name: string;
+  phone: string;
+  pickup: string;
+  destination: string;
+  travel_date: string;
+  travel_time: string;
+  passengers: string;
+  vehicle: string;
+  quoted_fare: string | null;
+  status: string;
+}
+
+let rows: Row[] = [];
+let dbError = "";
+if (authed && env.DB) {
+  try {
+    const result = await env.DB.prepare(
+      "SELECT id, name, phone, pickup, destination, travel_date, travel_time, passengers, vehicle, quoted_fare, status FROM enquiries WHERE status = ? ORDER BY created_at DESC LIMIT 100",
+    )
+      .bind(active)
+      .all<Row>();
+    rows = result.results ?? [];
+  } catch {
+    dbError = "The enquiries table is not ready. Apply the D1 migration.";
+  }
+} else if (authed) {
+  dbError = "The D1 database binding DB is not connected.";
+}
+
+const phoneReady = !site.usingPlaceholderPhone;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Enquiries | Satpura Cabs</title>
+  </head>
+  <body>
+    <main class="section">
+      <div class="container">
+        <h1>Enquiries</h1>
+        {!authed ? (
+          <form class="form" method="post" action="/api/admin/login">
+            <div class="field">
+              <label for="password">Admin password</label>
+              <input id="password" name="password" type="password" required autocomplete="current-password" />
+            </div>
+            {Astro.url.searchParams.get("error") && <p>That password did not match.</p>}
+            <button class="btn primary" type="submit">Open dashboard</button>
+          </form>
+        ) : (
+          <>
+            <div class="actions">
+              {enquiryStatuses.map((status) => (
+                <a class:list={["btn", { primary: status === active }]} href={`/admin?status=${status}`}>{status}</a>
+              ))}
+              <form method="post" action="/api/admin/logout"><button class="btn" type="submit">Log out</button></form>
+            </div>
+            {dbError && <p>{dbError}</p>}
+            <div class="admin-list">
+              {rows.map((row) => (
+                <article class="card admin-card">
+                  <strong>{row.name}</strong>
+                  <p>{row.pickup} → {row.destination}</p>
+                  <p>{row.travel_date} at {row.travel_time} · {row.passengers || "—"} · {row.vehicle || "—"}</p>
+                  <p class="status">{row.status}</p>
+                  <div class="admin-actions">
+                    <a class="btn" href={phoneReady ? telHref(row.phone) : `tel:+${row.phone}`}>Call</a>
+                    <a class="btn soft" href={whatsappHref(row.phone, `Hello ${row.name}, this is Satpura Cabs about your ${row.pickup} to ${row.destination} enquiry.`)}>WhatsApp</a>
+                    <form method="post" action="/api/admin/status">
+                      <input type="hidden" name="id" value={row.id} />
+                      <label for={`fare-${row.id}`}>Quoted fare</label>
+                      <input id={`fare-${row.id}`} name="quoted_fare" value={row.quoted_fare || ""} placeholder="Ask, then record it" />
+                      <select name="status">
+                        {enquiryStatuses.map((status) => <option selected={status === row.status}>{status}</option>)}
+                      </select>
+                      <button class="btn primary" type="submit">Change status</button>
+                    </form>
+                  </div>
+                </article>
+              ))}
+              {!dbError && rows.length === 0 && <p>No {active} enquiries.</p>}
+            </div>
+          </>
+        )}
+      </div>
+    </main>
+  </body>
+</html>

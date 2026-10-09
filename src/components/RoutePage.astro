@@ -1,0 +1,113 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumb from "./Breadcrumb.astro";
+import QuoteForm from "./QuoteForm.astro";
+import FAQ from "./FAQ.astro";
+import VehicleCard from "./VehicleCard.astro";
+import RouteCard from "./RouteCard.astro";
+import { images } from "../data/images";
+import { vehicles, fareNote } from "../data/vehicles";
+import { site } from "../config/site";
+import { phoneHref, quoteHref } from "../lib/links";
+import { breadcrumbSchema, faqSchema, serviceSchema } from "../lib/schema";
+import type { RouteData } from "../data/routes";
+
+interface Props {
+  route: RouteData;
+}
+
+const { route } = Astro.props;
+const image = images[route.image];
+const path = `/${route.slug}`;
+---
+
+<Base
+  title={route.title}
+  description={route.description}
+  image={image.src}
+  jsonLd={[
+    serviceSchema(route.h1, route.description, path),
+    breadcrumbSchema(route.h1, path),
+    faqSchema(route.faqs),
+  ]}
+>
+  <section class="pagehero">
+    <div class="container">
+      <Breadcrumb current={route.h1} />
+      <div class="routehero">
+        <div>
+          <div class="eyebrow">ROUTE TAXI</div>
+          <h1>{route.h1}</h1>
+          <p class="lead">{route.intro}</p>
+          <div class="actions">
+            <a class="btn primary" data-track="whatsapp_click" href={quoteHref(site.usingPlaceholderWhatsapp === false, site.whatsappNumber, route.whatsappMessage)}>WhatsApp this route</a>
+            <a class="btn" data-track="phone_click" href={phoneHref(!site.usingPlaceholderPhone, site.phoneNumber)}>Call</a>
+          </div>
+        </div>
+        <img
+          src={image.src}
+          alt={route.imageAlt}
+          width={image.width}
+          height={image.height}
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid2">
+      <div>
+        <h2>{route.overviewTitle}</h2>
+        <p>{route.overview}</p>
+        <h3>Pickup options</h3>
+        <ul>
+          {route.pickups.map((item) => <li>{item}</li>)}
+        </ul>
+        <h3>Drop options</h3>
+        <ul>
+          {route.drops.map((item) => <li>{item}</li>)}
+        </ul>
+        <h3>One-way or return</h3>
+        <p>{route.tripNote}</p>
+        <table class="fare">
+          <thead>
+            <tr>
+              <th>Vehicle</th>
+              <th>Use case</th>
+              <th>Fare</th>
+            </tr>
+          </thead>
+          <tbody>
+            {vehicles.map((vehicle) => <VehicleCard name={vehicle.name} use={vehicle.use} />)}
+          </tbody>
+        </table>
+        <p style="font-size:13px;color:#718078">{fareNote}</p>
+      </div>
+      <QuoteForm pickup={route.pickup} destination={route.drop} idPrefix={route.slug} />
+    </div>
+  </section>
+  <section class="section alt">
+    <div class="container">
+      <h2>Travel planning notes</h2>
+      <div class="grid3">
+        {route.planning.map((note) => (
+          <div class="card">
+            <h3>{note.title}</h3>
+            <p>{note.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <h2>Related routes</h2>
+      <div class="grid3">
+        {route.related.map((item) => (
+          <RouteCard title={item.title} text={item.text} href={item.href} variant="link" />
+        ))}
+      </div>
+    </div>
+  </section>
+  <FAQ items={route.faqs} />
+</Base>

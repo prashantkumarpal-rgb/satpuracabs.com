@@ -1,0 +1,20 @@
+---
+import { site } from "../config/site";
+import { quoteHref } from "../lib/links";
+
+const href = quoteHref(!site.usingPlaceholderWhatsapp, site.whatsappNumber, site.quoteMessage);
+---
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="/">SATPURA <span>CABS</span></a>
+    <nav class="navlinks" aria-label="Primary">
+      <a href="/#routes">Routes</a>
+      <a href="/#services">Services</a>
+      <a href="/pachmarhi-taxi">Pachmarhi</a>
+      <a href="/tamia-taxi">Tamia</a>
+      <a href="/madhai-taxi">Madhai</a>
+    </nav>
+    <a class="btn primary" data-track="whatsapp_click" href={href}>Get Quote</a>
+  </div>
+</header>

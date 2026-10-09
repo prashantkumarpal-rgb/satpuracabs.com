@@ -1,0 +1,27 @@
+---
+interface Props {
+  title: string;
+  text: string;
+  href: string;
+  variant?: "row" | "link";
+}
+
+const { title, text, href, variant = "row" } = Astro.props;
+---
+
+{
+  variant === "link" ? (
+    <a class="card" data-track="route_cta_click" href={href}>
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </a>
+  ) : (
+    <div class="card route">
+      <div>
+        <strong>{title}</strong>
+        <p>{text}</p>
+      </div>
+      <a class="pill" data-track="route_cta_click" href={href}>View route</a>
+    </div>
+  )
+}

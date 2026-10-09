@@ -1,0 +1,9 @@
+---
+import { site } from "../config/site";
+import { phoneHref, quoteHref } from "../lib/links";
+---
+
+<div class="mobilebar">
+  <a class="btn primary" data-track="phone_click" href={phoneHref(!site.usingPlaceholderPhone, site.phoneNumber)}>Call Now</a>
+  <a class="btn soft" data-track="whatsapp_click" href={quoteHref(!site.usingPlaceholderWhatsapp, site.whatsappNumber, site.quickMessage)}>WhatsApp</a>
+</div>

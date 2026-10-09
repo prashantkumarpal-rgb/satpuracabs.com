@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs><linearGradient id="a" x2="0" y2="1"><stop stop-color="#d9eef6"/><stop offset="1" stop-color="#d9e6c8"/></linearGradient></defs>
+<rect width="1600" height="900" fill="url(#a)"/><path d="M0 530 Q300 350 600 510 T1200 500 T1600 470 V900 H0Z" fill="#547e58"/>
+<path d="M0 900 L610 560 Q800 500 1600 900Z" fill="#51565a"/><path d="M200 900 L650 610" stroke="#eee" stroke-width="12" stroke-dasharray="50 40"/>
+<g transform="translate(590 500)"><rect x="0" y="85" width="430" height="120" rx="28" fill="#f4f4f2"/><path d="M75 85 L125 20 H310 L370 85Z" fill="#dfe8ea"/><rect x="145" y="35" width="70" height="45" fill="#91b6c7"/><rect x="225" y="35" width="70" height="45" fill="#91b6c7"/><circle cx="95" cy="205" r="38" fill="#20272a"/><circle cx="345" cy="205" r="38" fill="#20272a"/><circle cx="95" cy="205" r="17" fill="#aaa"/><circle cx="345" cy="205" r="17" fill="#aaa"/></g>
+<text x="70" y="110" font-family="Arial,sans-serif" font-size="52" font-weight="700" fill="#243f32">LOCAL TAXI • LOCAL KNOWLEDGE</text>
+<text x="72" y="165" font-family="Arial,sans-serif" font-size="27" fill="#466650">Pachmarhi • Tamia • Madhai • Pipariya • Bhopal</text>
+</svg>

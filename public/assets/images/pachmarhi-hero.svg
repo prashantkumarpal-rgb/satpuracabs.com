@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#dceeff"/><stop offset=".62" stop-color="#eef7ef"/><stop offset="1" stop-color="#c9dfc3"/></linearGradient><linearGradient id="hill" x2="0" y2="1"><stop stop-color="#557b55"/><stop offset="1" stop-color="#244a35"/></linearGradient></defs>
+<rect width="1600" height="900" fill="url(#sky)"/><circle cx="1260" cy="170" r="82" fill="#f6d88a" opacity=".8"/>
+<path d="M0 570 L190 420 330 515 510 300 710 520 910 360 1110 540 1320 330 1600 540 V900 H0Z" fill="url(#hill)"/>
+<path d="M0 650 Q220 520 420 650 T820 640 T1220 650 T1600 620 V900 H0Z" fill="#183c2c" opacity=".9"/>
+<path d="M0 690 Q260 610 520 700 T1040 690 T1600 680" fill="none" stroke="#dfe8d9" stroke-width="10" opacity=".75"/>
+<path d="M830 650 C760 590 730 520 755 450 C780 380 845 350 900 385 C955 420 975 495 950 560 C925 625 900 650 830 650Z" fill="#fff" opacity=".12"/>
+<path d="M870 460 C850 520 835 560 850 610" fill="none" stroke="#ffffff" stroke-width="20" opacity=".8"/>
+<text x="80" y="120" font-family="Arial,sans-serif" font-size="54" font-weight="700" fill="#183c2c">SATPURA CABS</text>
+<text x="82" y="178" font-family="Arial,sans-serif" font-size="28" fill="#365844">Pachmarhi • Satpura • Madhya Pradesh</text>
+</svg>
