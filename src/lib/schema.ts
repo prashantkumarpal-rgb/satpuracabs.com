@@ -32,14 +32,18 @@ export function serviceSchema(name: string, description: string, path: string) {
   };
 }
 
-export function breadcrumbSchema(currentName: string, path: string) {
+export function breadcrumbSchema(currentName: string, path: string, parent?: { name: string; path: string }) {
+  const items = [
+    { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+  ];
+  if (parent) {
+    items.push({ "@type": "ListItem", position: 2, name: parent.name, item: new URL(parent.path, site.url).href });
+  }
+  items.push({ "@type": "ListItem", position: items.length + 1, name: currentName, item: new URL(path, site.url).href });
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
-      { "@type": "ListItem", position: 2, name: currentName, item: new URL(path, site.url).href },
-    ],
+    itemListElement: items,
   };
 }
 

@@ -8,7 +8,9 @@ export const POST: APIRoute = async ({ request, cookies, locals, redirect }) => 
   const form = await request.formData();
   const password = String(form.get("password") || "");
   const secret = runtimeEnv(locals).ADMIN_SECRET?.trim();
-  if (!secret || password !== secret) return redirect("/admin?error=1");
+  const next = String(form.get("next") || "");
+  const back = next === "/admin/blog" ? "/admin/blog" : "/admin";
+  if (!secret || password !== secret) return redirect(`${back}?error=1`);
   cookies.set(adminCookieName, await adminToken(secret), {
     httpOnly: true,
     secure: import.meta.env.PROD,
@@ -16,5 +18,5 @@ export const POST: APIRoute = async ({ request, cookies, locals, redirect }) => 
     path: "/",
     maxAge: 60 * 60 * 12,
   });
-  return redirect("/admin");
+  return redirect(back);
 };

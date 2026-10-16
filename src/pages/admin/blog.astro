@@ -1,0 +1,138 @@
+---
+export const prerender = false;
+
+import { adminCookieMatches, adminCookieName } from "../../lib/admin-auth";
+import { runtimeEnv } from "../../lib/db";
+import type { BlogBody } from "../../lib/blog";
+import "../../styles/global.css";
+
+const env = runtimeEnv(Astro.locals);
+const authed = await adminCookieMatches(Astro.cookies.get(adminCookieName)?.value, env.ADMIN_SECRET);
+const draftId = Number(Astro.url.searchParams.get("id"));
+const error = Astro.url.searchParams.get("error");
+const published = Astro.url.searchParams.get("published");
+
+interface DraftRow {
+  id: number;
+  title: string;
+  description: string;
+  body: string;
+  status: string;
+}
+
+let draft: (DraftRow & { parsed: BlogBody }) | null = null;
+if (authed && env.DB && Number.isInteger(draftId) && draftId > 0) {
+  try {
+    const row = await env.DB.prepare("SELECT id, title, description, body, status FROM posts WHERE id = ?")
+      .bind(draftId)
+      .first<DraftRow>();
+    if (row) draft = { ...row, parsed: JSON.parse(row.body) as BlogBody };
+  } catch {
+    draft = null;
+  }
+}
+
+interface ListRow {
+  id: number;
+  slug: string;
+  title: string;
+  status: string;
+}
+
+let posts: ListRow[] = [];
+if (authed && env.DB) {
+  try {
+    const result = await env.DB.prepare("SELECT id, slug, title, status FROM posts ORDER BY id DESC LIMIT 30").all<ListRow>();
+    posts = result.results ?? [];
+  } catch {
+    posts = [];
+  }
+}
+
+const errorText: Record<string, string> = {
+  "1": "That password did not match.",
+  database: "Connect the D1 database and apply migrations/0002_posts.sql first.",
+  topic: "Write a topic of at least a few words.",
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Guides | Satpura Cabs</title>
+  </head>
+  <body>
+    <main class="section">
+      <div class="container">
+        <p><a href="/admin">Enquiries</a></p>
+        <h1>Write a guide</h1>
+        <p class="lead">Give a traveller question, such as how to reach Pachmarhi from Pipariya station. Extra details are optional. The draft answers the question first, links only to pages already on this site, and never invents a fare.</p>
+        {!authed ? (
+          <form class="form" method="post" action="/api/admin/login">
+            <input type="hidden" name="next" value="/admin/blog" />
+            <div class="field">
+              <label for="password">Admin password</label>
+              <input id="password" name="password" type="password" required autocomplete="current-password" />
+            </div>
+            {error === "1" && <p>That password did not match.</p>}
+            <button class="btn primary" type="submit">Open dashboard</button>
+          </form>
+        ) : draft ? (
+          <form class="form" method="post" action="/api/admin/blog/publish">
+            <input type="hidden" name="id" value={draft.id} />
+            <div class="field">
+              <label for="title">Title</label>
+              <input id="title" name="title" value={draft.title} required />
+            </div>
+            <div class="field">
+              <label for="description">Description</label>
+              <textarea id="description" name="description" required>{draft.description}</textarea>
+            </div>
+            <div class="field">
+              <label for="intro">Opening answer</label>
+              <textarea id="intro" name="intro" required>{draft.parsed.intro}</textarea>
+            </div>
+            {draft.parsed.sections.map((section) => (
+              <div class="card">
+                <h2>{section.heading}</h2>
+                {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+              </div>
+            ))}
+            <div class="actions">
+              <button class="btn primary" name="action" value="publish" type="submit">Publish to the site</button>
+              <button class="btn" name="action" value="delete" type="submit">Discard draft</button>
+            </div>
+          </form>
+        ) : (
+          <form class="form" method="post" action="/api/admin/blog/generate">
+            {published && <p>The guide is live.</p>}
+            {error && <p>{errorText[error] || error}</p>}
+            <div class="field">
+              <label for="topic">Topic</label>
+              <input id="topic" name="topic" required placeholder="How early should I leave Bhopal for Pachmarhi?" />
+            </div>
+            <div class="field">
+              <label for="details">Details, if you have them</label>
+              <textarea id="details" name="details" placeholder="Mention a station, a season, or a stop. Leave blank if the topic is enough."></textarea>
+            </div>
+            <button class="btn primary" type="submit">Write draft</button>
+          </form>
+        )}
+        {authed && posts.length > 0 && (
+          <div class="admin-list">
+            <h2>Guides</h2>
+            {posts.map((post) => (
+              <p>
+                {post.status === "published" ? <a href={`/blog/${post.slug}`}>{post.title}</a> : <a href={`/admin/blog?id=${post.id}`}>{post.title}</a>}
+                {" "}· {post.status}
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
+  </body>
+</html>

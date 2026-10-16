@@ -20,6 +20,7 @@ npm run dev
 ```sh
 npx wrangler d1 create satpura-cabs
 npx wrangler d1 execute satpura-cabs --remote --file=migrations/0001_enquiries.sql
+npx wrangler d1 execute satpura-cabs --remote --file=migrations/0002_posts.sql
 ```
 
 4. Put the database id in `wrangler.toml`, and bind that D1 database to the Pages project as `DB`.
@@ -29,10 +30,14 @@ Phone, WhatsApp, the Turnstile site key, and the GA4 id are read while the site 
 
 ## Still to supply
 
-- Real phone and WhatsApp numbers
+- Phone and WhatsApp are both +91 94244 70435.
 - Cloudflare Turnstile site key and secret
 - Resend API key, from address, and the inbox that should receive enquiries
 - Admin password
-- GA4 measurement id, after the Analytics property exists
 - Real fares, only after you decide them. Until then the site says “Ask for current fare”
 - Your own photographs of cars and drivers, to replace the illustrations
+- An OpenAI-compatible `LLM_API_KEY` if you want to draft guides at `/admin/blog`. A Cloudflare Workers AI binding named `AI` works instead.
+
+## Guides
+
+Open `/admin/blog` after the admin password is set. Write a traveller question as the topic. Details are optional. Check the draft, then publish it. It appears at `/blog` on the next request, without another build. The writer is told not to invent fares, reviews, or rankings, and it can link only to pages that already exist.

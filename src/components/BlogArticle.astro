@@ -1,0 +1,54 @@
+---
+import type { BlogBody } from "../lib/blog";
+
+interface Props {
+  title: string;
+  description: string;
+  publishedAt?: string;
+  body: BlogBody;
+}
+
+const { title, description, publishedAt, body } = Astro.props;
+const date = publishedAt ? new Date(publishedAt) : null;
+const dateLabel = date && !Number.isNaN(date.getTime())
+  ? date.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
+  : "";
+---
+
+<article class="article">
+  <p class="eyebrow">Satpura Cabs guide</p>
+  <h1>{title}</h1>
+  {dateLabel && <p class="caption">Published {dateLabel}</p>}
+  <p class="lead">{body.intro}</p>
+  {body.sections.map((section) => (
+    <section>
+      <h2>{section.heading}</h2>
+      {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </section>
+  ))}
+  {body.faqs.length > 0 && (
+    <section class="faq">
+      <h2>Questions travellers ask</h2>
+      {body.faqs.map((faq) => (
+        <details>
+          <summary>{faq.question}</summary>
+          <p>{faq.answer}</p>
+        </details>
+      ))}
+    </section>
+  )}
+  {body.related.length > 0 && (
+    <section>
+      <h2>Related on this site</h2>
+      <p>
+        {body.related.map((href, index) => (
+          <>
+            {index > 0 && " · "}
+            <a href={href}>{href.replaceAll("-", " ").replace("/", "")}</a>
+          </>
+        ))}
+      </p>
+    </section>
+  )}
+  <p class="caption">{description}</p>
+</article>

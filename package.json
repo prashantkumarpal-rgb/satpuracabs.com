@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "node --experimental-strip-types --test src/lib/enquiry.test.ts"
+    "test": "node --experimental-strip-types --test src/lib/enquiry.test.ts src/lib/blog.test.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.13",

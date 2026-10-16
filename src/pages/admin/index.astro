@@ -71,6 +71,7 @@ const phoneReady = !site.usingPlaceholderPhone;
         ) : (
           <>
             <div class="actions">
+              <a class="btn" href="/admin/blog">Guides</a>
               {enquiryStatuses.map((status) => (
                 <a class:list={["btn", { primary: status === active }]} href={`/admin?status=${status}`}>{status}</a>
               ))}

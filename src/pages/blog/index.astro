@@ -1,0 +1,51 @@
+---
+export const prerender = false;
+
+import Base from "../../layouts/Base.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { runtimeEnv } from "../../lib/db";
+
+interface PostRow {
+  slug: string;
+  title: string;
+  description: string;
+  published_at: string;
+}
+
+const env = runtimeEnv(Astro.locals);
+let posts: PostRow[] = [];
+if (env.DB) {
+  try {
+    const result = await env.DB.prepare(
+      "SELECT slug, title, description, published_at FROM posts WHERE status = 'published' ORDER BY published_at DESC LIMIT 50",
+    ).all<PostRow>();
+    posts = result.results ?? [];
+  } catch {
+    posts = [];
+  }
+}
+---
+
+<Base
+  title="Satpura travel guides | Satpura Cabs"
+  description="Practical notes for Pachmarhi, Pipariya, Tamia, Madhai and Bhopal taxi trips. Ask Satpura Cabs for the current fare."
+>
+  <section class="pagehero">
+    <div class="container">
+      <Breadcrumb current="Guides" />
+      <h1>Satpura travel guides</h1>
+      <p class="lead">Short answers for the trips people actually take. A guide explains the route. The fare is confirmed when you enquire.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid2">
+      {posts.map((post) => (
+        <a class="card" href={`/blog/${post.slug}`}>
+          <h3>{post.title}</h3>
+          <p>{post.description}</p>
+        </a>
+      ))}
+      {posts.length === 0 && <p>Guides will appear here after they are published.</p>}
+    </div>
+  </section>
+</Base>

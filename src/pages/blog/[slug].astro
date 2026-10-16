@@ -1,0 +1,53 @@
+---
+export const prerender = false;
+
+import Base from "../../layouts/Base.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import BlogArticle from "../../components/BlogArticle.astro";
+import { runtimeEnv } from "../../lib/db";
+import type { BlogBody } from "../../lib/blog";
+import { breadcrumbSchema, faqSchema } from "../../lib/schema";
+import { site } from "../../config/site";
+
+const slug = Astro.params.slug || "";
+const env = runtimeEnv(Astro.locals);
+const row = env.DB
+  ? await env.DB.prepare(
+      "SELECT title, description, body, published_at FROM posts WHERE slug = ? AND status = 'published'",
+    )
+      .bind(slug)
+      .first<{ title: string; description: string; body: string; published_at: string }>()
+  : null;
+
+if (!row) {
+  return new Response("Not found", { status: 404 });
+}
+
+const body = JSON.parse(row.body) as BlogBody;
+const path = `/blog/${slug}`;
+const article = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: row.title,
+  description: row.description,
+  datePublished: row.published_at,
+  dateModified: row.published_at,
+  mainEntityOfPage: new URL(path, site.url).href,
+  author: { "@type": "Organization", name: site.name, url: site.url },
+  publisher: { "@type": "Organization", name: site.name, url: site.url },
+};
+---
+
+<Base
+  title={`${row.title} | Satpura Cabs`}
+  description={row.description}
+  type="article"
+  jsonLd={[article, breadcrumbSchema(row.title, path, { name: "Guides", path: "/blog" }), faqSchema(body.faqs)]}
+>
+  <section class="pagehero">
+    <div class="container">
+      <Breadcrumb current={row.title} parent={{ href: "/blog", label: "Guides" }} />
+      <BlogArticle title={row.title} description={row.description} publishedAt={row.published_at} body={body} />
+    </div>
+  </section>
+</Base>

@@ -1,11 +1,14 @@
 ---
 interface Props {
   current: string;
+  parent?: { href: string; label: string };
 }
 
-const { current } = Astro.props;
+const { current, parent } = Astro.props;
 ---
 
 <nav class="crumb" aria-label="Breadcrumb">
-  <a href="/">Home</a> / {current}
+  <a href="/">Home</a>
+  {parent && <> / <a href={parent.href}>{parent.label}</a></>}
+  / {current}
 </nav>

@@ -6,8 +6,8 @@ function configured(value: string | undefined): string {
   return trimmed;
 }
 
-const phoneConfigured = configured(import.meta.env.PUBLIC_PHONE_NUMBER);
-const whatsappConfigured = configured(import.meta.env.PUBLIC_WHATSAPP_NUMBER);
+const phoneConfigured = configured(import.meta.env.PUBLIC_PHONE_NUMBER) || "+91 94244 70435";
+const whatsappConfigured = configured(import.meta.env.PUBLIC_WHATSAPP_NUMBER) || "+91 94244 70435";
 
 export const site = {
   name: "Satpura Cabs",
@@ -21,5 +21,5 @@ export const site = {
   quoteMessage: "Hello Satpura Cabs, I want a taxi quote.",
   quickMessage: "Hello Satpura Cabs, I need a taxi quote.",
   turnstileSiteKey: configured(import.meta.env.PUBLIC_TURNSTILE_SITE_KEY),
-  gaMeasurementId: configured(import.meta.env.PUBLIC_GA_MEASUREMENT_ID),
+  gaMeasurementId: configured(import.meta.env.PUBLIC_GA_MEASUREMENT_ID) || "G-0H1B48JGZJ",
 } as const;

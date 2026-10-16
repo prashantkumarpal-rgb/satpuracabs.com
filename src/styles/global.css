@@ -29,3 +29,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,s
 .admin-actions{display:flex;flex-wrap:wrap;gap:8px}
 .admin-actions form{display:flex;gap:8px;align-items:center}
 .status{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.article{max-width:720px}
+.article h2{font-size:28px;margin-top:28px}
+.article p{color:var(--muted)}
+textarea{width:100%;min-height:96px;border:1px solid #d5e3d8;border-radius:12px;padding:12px;font:inherit}

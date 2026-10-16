@@ -18,6 +18,12 @@ export interface WorkerEnv {
   ADMIN_SECRET?: string;
   PHONE_NUMBER?: string;
   WHATSAPP_NUMBER?: string;
+  LLM_API_KEY?: string;
+  LLM_BASE_URL?: string;
+  LLM_MODEL?: string;
+  AI?: {
+    run: (model: string, input: { messages: { role: string; content: string }[] }) => Promise<{ response?: string }>;
+  };
 }
 
 export function runtimeEnv(locals: { runtime?: { env?: WorkerEnv } }): WorkerEnv {
