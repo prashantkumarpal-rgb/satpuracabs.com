@@ -1,5 +1,6 @@
 import { destinations } from "./destinations";
 import { routes } from "./routes";
+import { travelGuidePaths } from "./travel-guide";
 
 export const extraPages = [
   {
@@ -22,5 +23,6 @@ export function publicPaths(): string[] {
     ...destinations.map((item) => `/${item.slug}`),
     ...routes.map((item) => `/${item.slug}`),
     ...extraPages.map((item) => item.path),
+    ...travelGuidePaths(),
   ];
 }

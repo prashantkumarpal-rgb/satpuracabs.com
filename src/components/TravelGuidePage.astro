@@ -1,0 +1,130 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumb from "./Breadcrumb.astro";
+import FAQ from "./FAQ.astro";
+import QuoteForm from "./QuoteForm.astro";
+import { site } from "../config/site";
+import { phoneHref, quoteHref } from "../lib/links";
+import { breadcrumbSchema, faqSchema, touristDestinationSchema, webPageSchema } from "../lib/schema";
+import type { GuidePageData } from "../data/travel-guide";
+
+interface Props {
+  page: GuidePageData;
+}
+
+const { page } = Astro.props;
+const path = page.slug ? `/travel-guide/${page.slug}` : "/travel-guide";
+const parent = page.slug ? { href: "/travel-guide", label: "Travel guide" } : undefined;
+const schemaParent = page.slug ? { name: "Travel guide", path: "/travel-guide" } : undefined;
+const jsonLd = [
+  webPageSchema(page.h1, page.description, path),
+  breadcrumbSchema(page.crumb, path, schemaParent),
+];
+if (page.destinationName) jsonLd.push(touristDestinationSchema(page.destinationName, page.description, path));
+if (page.faqs?.length) jsonLd.push(faqSchema(page.faqs));
+---
+
+<Base title={page.title} description={page.description} image={page.image.src} jsonLd={jsonLd}>
+  <section class="pagehero">
+    <div class="container">
+      <Breadcrumb current={page.crumb} parent={parent} />
+      <div class="routehero">
+        <div>
+          <div class="eyebrow">{page.eyebrow}</div>
+          <h1>{page.h1}</h1>
+          <p class="lead">{page.lead}</p>
+          <div class="actions">
+            <a class="btn primary" data-track="whatsapp_click" href={quoteHref(!site.usingPlaceholderWhatsapp, site.whatsappNumber, page.enquiry)}>Ask for the current fare</a>
+            <a class="btn" data-track="phone_click" href={phoneHref(!site.usingPlaceholderPhone, site.phoneNumber)}>Call {site.phoneDisplay}</a>
+          </div>
+          <p class="caption">A cab fare covers the vehicle and the agreed route. Safari permits, forest vehicles, stays and boating are separate.</p>
+        </div>
+        <img src={page.image.src} alt={page.image.alt} width={page.image.width} height={page.image.height} fetchpriority="high" />
+      </div>
+    </div>
+  </section>
+
+  {page.sections.map((section) => (
+    <section class="section" id={section.id}>
+      <div class="container">
+        <h2>{section.heading}</h2>
+        {section.lead && <p class="lead">{section.lead}</p>}
+        {section.paragraphs?.map((paragraph) => <p class="lead">{paragraph}</p>)}
+        {section.items && (
+          <ul class="checklist">
+            {section.items.map((item) => <li>{item}</li>)}
+          </ul>
+        )}
+        {section.days && (
+          <div class="grid2">
+            {section.days.map((day) => (
+              <article class="card">
+                <span class="pill">{day.label}</span>
+                <p>{day.text}</p>
+              </article>
+            ))}
+          </div>
+        )}
+        {section.cards && (
+          <div class="grid3">
+            {section.cards.map((card) => (
+              <article class="card guide-card">
+                {card.image && <img src={card.image.src} alt={card.image.alt} width={card.image.width} height={card.image.height} loading="lazy" />}
+                <div class="card-body">
+                  {card.tag && <span class="pill">{card.tag}</span>}
+                  <h3>{card.href ? <a href={card.href}>{card.title}</a> : card.title}</h3>
+                  <p>{card.text}</p>
+                  {card.note && <p class="caption">{card.note}</p>}
+                  {card.href && <p><a href={card.href}>{card.linkLabel || "Read more"}</a></p>}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+        {section.table && (
+          <table class="guide-table">
+            <thead>
+              <tr>{section.table.headers.map((header) => <th>{header}</th>)}</tr>
+            </thead>
+            <tbody>
+              {section.table.rows.map((row) => (
+                <tr>{row.map((cell) => <td>{cell}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {section.links && (
+          <p class="guide-links">
+            {section.links.map((link, index) => (
+              <>
+                {index > 0 && " · "}
+                <a href={link.href}>{link.label}</a>
+              </>
+            ))}
+          </p>
+        )}
+      </div>
+    </section>
+  ))}
+
+  {page.faqs && <FAQ items={page.faqs} />}
+
+  <section class="section alt">
+    <div class="container grid2">
+      <div>
+        <h2>Ask Satpura Cabs for this route</h2>
+        <p class="lead">Tell us the date, the pickup and the group size. We will confirm the vehicle and the current fare. We do not book safari permits or forest entry for you.</p>
+        <p>
+          {page.related.map((link, index) => (
+            <>
+              {index > 0 && " · "}
+              <a href={link.href}>{link.label}</a>
+            </>
+          ))}
+        </p>
+        <p class="caption">Pictures on this guide are illustrations, not verified photographs of the named place.</p>
+      </div>
+      <QuoteForm idPrefix={`guide-${page.slug || "hub"}`} destination={page.destinationName || "Satpura"} tripType="One way" />
+    </div>
+  </section>
+</Base>

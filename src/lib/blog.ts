@@ -48,6 +48,15 @@ export function linkAllowlist(): string[] {
     "/pachmarhi-local-sightseeing",
     "/contact",
     "/blog",
+    "/travel-guide",
+    "/travel-guide/madhai",
+    "/travel-guide/churna",
+    "/travel-guide/pachmarhi",
+    "/travel-guide/tamia-patalkot",
+    "/travel-guide/itineraries",
+    "/travel-guide/treks",
+    "/travel-guide/other-places",
+    "/travel-guide/plan-your-trip",
   ];
   return pages;
 }

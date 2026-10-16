@@ -1,0 +1,10 @@
+---
+export const prerender = true;
+
+import TravelGuidePage from "../../components/TravelGuidePage.astro";
+import { travelGuides } from "../../data/travel-guide";
+
+const page = travelGuides[0];
+---
+
+<TravelGuidePage page={page} />

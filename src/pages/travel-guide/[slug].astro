@@ -1,0 +1,16 @@
+---
+export const prerender = true;
+
+import TravelGuidePage from "../../components/TravelGuidePage.astro";
+import { travelGuides } from "../../data/travel-guide";
+
+export function getStaticPaths() {
+  return travelGuides
+    .filter((page) => page.slug)
+    .map((page) => ({ params: { slug: page.slug }, props: { page } }));
+}
+
+const { page } = Astro.props;
+---
+
+<TravelGuidePage page={page} />

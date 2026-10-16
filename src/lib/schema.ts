@@ -47,6 +47,28 @@ export function breadcrumbSchema(currentName: string, path: string, parent?: { n
   };
 }
 
+export function webPageSchema(name: string, description: string, path: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name,
+    description,
+    url: new URL(path, site.url).href,
+    inLanguage: "en-IN",
+    isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  };
+}
+
+export function touristDestinationSchema(name: string, description: string, path: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    name,
+    description,
+    url: new URL(path, site.url).href,
+  };
+}
+
 export function faqSchema(faqs: readonly RouteFaq[]) {
   return {
     "@context": "https://schema.org",
